@@ -8,7 +8,7 @@ class Profile extends React.Component {
 	static async getInitialProps(context, apolloClient) {
 		const { loggedInUser } = await checkLoggedIn(context, apolloClient);
 
-		return { user: loggedInUser.profile };
+		return { user: loggedInUser.getUser };
 	}
 
 	render() {
