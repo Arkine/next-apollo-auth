@@ -1,21 +1,21 @@
-import React from 'react'
-import Link from 'next/link'
+import React from 'react';
+import Link from 'next/link';
 
-import withData from '../lib/withData'
-import checkLoggedIn from '../lib/checkLoggedIn'
-// import { checkLoggedIn } from ~'../lib'
+import withData from '../lib/withData';
+import checkLoggedIn from '../lib/checkLoggedIn';
 
 class Index extends React.Component {
 	static async getInitialProps(context, apolloClient) {
-		const { loggedInUser } = await checkLoggedIn(context, apolloClient)
+		const { loggedInUser } = await checkLoggedIn(context, apolloClient);
 
 		return {
-			user: loggedInUser.profile
+			user: loggedInUser.getUser
 		}
 	}
 
 	render() {
-		const { user } = this.props
+		const { user } = this.props;
+		console.log(user);
 		if (user) {
 			return (
 				<div>
@@ -29,9 +29,6 @@ class Index extends React.Component {
 						pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
 						culpa qui officia deserunt mollit anim id est laborum.
 						<br />
-						<br />
-						<a href="/connect/github">Link Account With GitHub</a>
-						<br />
 						<Link href="/profile">
 							<a>Go to Profile</a>
 						</Link>
@@ -42,7 +39,7 @@ class Index extends React.Component {
 
 		return (
 			<div>
-				<h1> Auth Example with Next.js and Apollo </h1>
+				<h1>Next with Apollo</h1>
 				<Link href="/login">
 					<a>Login</a>
 				</Link>{' '}
@@ -51,11 +48,9 @@ class Index extends React.Component {
 					<a>Signup</a>
 				</Link>{' '}
 				to view hidden resources
-				<br /> <br />
-				<a href="/auth/github">Auth With GitHub</a>
 			</div>
-		)
+		);
 	}
 }
 
-export default withData(Index)
+export default withData(Index);

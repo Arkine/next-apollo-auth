@@ -1,38 +1,39 @@
-import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import React from 'react';
+import { graphql } from 'react-apollo';
+
+import SIGNUP_QUERY from '../queries/addUser';
 
 class signup extends React.Component {
 	state = {
 		email: null,
-		fullname: null,
+		name: null,
 		password: null,
 		error: null
 	}
 
 	onFormSubmit = e => {
 		e.preventDefault()
-		let { email, fullname, password } = this.state
+		let { email, name, password } = this.state
 
 		// Check non null email && password
 		if (typeof email === 'string' && typeof password === 'string') {
 			// trim fields
 			email = email.trim()
-			fullname = fullname.trim()
+			name = name.trim()
 			password = password.trim()
 
 			// Check for email && password length
 			if (email.length > 0 && password.length > 0) {
-				this.props
-					.mutate({
+				this.props.signupMutator({
 						variables: {
 							email,
-							fullname,
+							name,
 							password
 						}
 					})
 					.then(() => {
 						this.setState({ error: null })
-						window.location = '/'
+						window.location = '/login'
 					})
 					.catch(({ graphQLErrors: err }) =>
 						this.setState({ error: err[0].message })
@@ -58,10 +59,10 @@ class signup extends React.Component {
 					/>
 				</div>
 				<div>
-					<label> Fullname </label>
+					<label> Name </label>
 					<input
 						type="text"
-						onInput={e => this.setState({ fullname: e.target.value })}
+						onInput={e => this.setState({ name: e.target.value })}
 						placeholder="John Doe"
 					/>
 				</div>
@@ -76,53 +77,12 @@ class signup extends React.Component {
 				<div>
 					<button> Sign up </button>
 				</div>
-				<style jsx>
-					{`
-						* {
-							box-sizing: border-box;
-							margin: 0;
-						}
-
-						h1 {
-							margin: 2rem 0;
-						}
-
-						label {
-							display: block;
-						}
-
-						form > div {
-							margin-top: 1rem;
-						}
-
-						input,
-						button {
-							padding: 0.5rem;
-						}
-
-						button {
-							width: 12rem;
-							border: none;
-							cursor: pointer;
-						}
-
-						.error {
-							color: red;
-							display: block;
-							margin: 1rem 0;
-						}
-					`}
-				</style>
+				
 			</form>
 		)
 	}
 }
 
-const mutator = gql`
-	mutation createUser($email: String!, $fullname: String, $password: String!) {
-		createUser(email: $email, fullname: $fullname, password: $password) {
-			email
-		}
-	}
-`
-export default graphql(mutator)(signup)
+export default graphql(SIGNUP_QUERY, {
+	name: 'signupMutator'
+})(signup);

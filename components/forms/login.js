@@ -1,5 +1,7 @@
-import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import React from 'react';
+import { graphql } from 'react-apollo';
+
+import LOGIN_QUERY from '../queries/login';
 
 class login extends React.Component {
 	state = {
@@ -9,19 +11,22 @@ class login extends React.Component {
 	}
 
 	onFormSubmit = e => {
-		e.preventDefault()
-		let { email, password } = this.state
+		e.preventDefault();
+		let { email, password } = this.state;
+
+		console.log('submitted');
 
 		// Check non null email && password
 		if (typeof email === 'string' && typeof password === 'string') {
 			// trim fields
-			email = email.trim()
-			password = password.trim()
+			email = email.trim();
+			password = password.trim();
 
 			// Check for email && password length
 			if (email.length > 0 && password.length > 0) {
+				console.log('good')
 				this.props
-					.mutate({
+					.loginMutator({
 						variables: {
 							email,
 							password
@@ -31,7 +36,7 @@ class login extends React.Component {
 						this.setState({ error: null })
 						window.location = '/'
 					})
-					.catch(({ graphQLErrors: err }) =>
+					.catch( ({ graphQLErrors: err }) =>
 						this.setState({ error: err[0].message })
 					)
 			} else {
@@ -65,57 +70,12 @@ class login extends React.Component {
 				<div>
 					<button type="submit"> Log In </button>
 				</div>
-				<style jsx>
-					{`
-						* {
-							box-sizing: border-box;
-							margin: 0;
-						}
-
-						h1 {
-							margin: 2rem 0;
-						}
-
-						label {
-							display: block;
-						}
-
-						form > div {
-							margin-top: 1rem;
-						}
-
-						input,
-						button {
-							padding: 0.5rem;
-						}
-
-						button {
-							width: 12rem;
-							border: none;
-							cursor: pointer;
-						}
-
-						.error {
-							color: red;
-							display: block;
-							margin: 1rem 0;
-						}
-					`}
-				</style>
+			
 			</form>,
-			<a key="btn" href="/auth/github">
-				{' '}
-				Auth With GitHub{' '}
-			</a>
 		]
 	}
 }
 
-const mutator = gql`
-	mutation login($email: String!, $password: String!) {
-		login(email: $email, password: $password) {
-			email
-		}
-	}
-`
-export default graphql(mutator)(login)
+export default graphql(LOGIN_QUERY, {
+	name: 'loginMutator'
+})(login);
