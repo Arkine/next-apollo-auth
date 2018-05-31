@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+// import Link from 'next/link';
 
 import withData from '../lib/withData';
 import checkLoggedIn from '../lib/checkLoggedIn';

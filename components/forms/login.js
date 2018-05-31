@@ -1,5 +1,6 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
+import Router from 'next/router';
 
 import LOGIN_QUERY from '../queries/login';
 
@@ -9,6 +10,19 @@ class login extends React.Component {
 		password: null,
 		error: null
 	}
+
+	static async getInitialProps(context, apolloClient) {
+		const { loggedInUser } = await checkLoggedIn(context, apolloClient);
+		console.log('initial props...')
+		// if (loggedInUser.getUser) {
+			Router.push('/');
+		// }
+
+		// return {
+			// user: loggedInUser.getUser
+		// }
+	}
+
 
 	onFormSubmit = e => {
 		e.preventDefault();
